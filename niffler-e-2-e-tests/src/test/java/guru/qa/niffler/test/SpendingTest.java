@@ -2,9 +2,13 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.jupiter.GenerateCategory;
 import guru.qa.niffler.jupiter.GenerateSpend;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.objects.pages.NifflerLoginPage;
+import guru.qa.niffler.objects.pages.NifflerMainPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,40 +19,39 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class SpendingTest {
 
-  static {
-    Configuration.browserSize = "1980x1024";
-  }
+    static {
+        Configuration.browserSize = "1980x1024";
+    }
 
-  @BeforeEach
-  void doLogin() {
-    Selenide.open("http://127.0.0.1:3000/main");
-    $("a[href*='redirect']").click();
-    $("input[name='username']").setValue("duck");
-    $("input[name='password']").setValue("12345");
-    $("button[type='submit']").click();
-  }
+    private NifflerLoginPage nifflerLoginPage;
+    private NifflerMainPage nifflerMainPage;
 
-  @GenerateSpend(
-      username = "duck",
-      description = "QA.GURU Advanced 4",
-      amount = 72500.00,
-      category = "Обучение",
-      currency = CurrencyValues.RUB
-  )
-  @Test
-  void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
-    $(".spendings-table tbody")
-        .$$("tr")
-        .find(text(spend.description()))
-        .$$("td")
-        .first()
-        .click();
+    @BeforeEach
+    void doLogin() {
+        nifflerMainPage = new NifflerMainPage();
+        nifflerLoginPage = new NifflerLoginPage();
+    }
 
-    $(byText("Delete selected"))
-        .click();
+    @GenerateSpend(
+            username = "duck",
+            description = "QA.GURU Advanced 4",
+            amount = 72500.00,
+            category = "Обучение",
+            currency = CurrencyValues.RUB
+    )
 
-    $(".spendings-table tbody")
-        .$$("tr")
-        .shouldHave(size(0));
-  }
+    @GenerateCategory(
+            username = "duck",
+            description = "Обучение"
+    )
+
+    @Test
+    void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend, CategoryJson category) {
+        Selenide.open("http://frontend.niffler.dc/main");
+        nifflerLoginPage.goToLoginPage();
+        nifflerLoginPage.sendUserData("duck", "12345");
+        nifflerMainPage.deleteFirstElementInTable(spend);
+        nifflerMainPage.clickDeleteFromTable();
+        nifflerMainPage.checkSizeOfTheTable(0);
+    }
 }
