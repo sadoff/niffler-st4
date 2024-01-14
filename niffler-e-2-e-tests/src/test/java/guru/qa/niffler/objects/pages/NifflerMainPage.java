@@ -15,12 +15,12 @@ public class NifflerMainPage {
     private final SelenideElement mainTable = $(".spendings-table tbody");
     private final SelenideElement deleteButton = $(byText("Delete selected"));
 
-    @Step("Удалить первый элемент в таблице")
-    public NifflerMainPage deleteFirstElementInTable(SpendJson spend){
+    @Step("Выбрать элемент в таблице с {description}")
+    public NifflerMainPage deleteFirstElementInTable(String description){
         mainTable
                 .shouldBe(visible)
                 .$$("tr")
-                .find(text(spend.description()))
+                .find(text(description))
                 .$$("td")
                 .first()
                 .click();

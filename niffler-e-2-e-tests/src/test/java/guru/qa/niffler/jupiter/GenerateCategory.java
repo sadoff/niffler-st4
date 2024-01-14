@@ -15,6 +15,6 @@ public @interface GenerateCategory {
 
   String username();
 
-  String description();
+  String category();
 
 }

@@ -39,7 +39,7 @@ public class GenerateCategoryExtension implements BeforeEachCallback {
             GenerateCategory categoryData = category.get();
             CategoryJson categoryJson = new CategoryJson(
                     null,
-                    categoryData.description(),
+                    categoryData.category(),
                     categoryData.username()
             );
 

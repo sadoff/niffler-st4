@@ -8,7 +8,7 @@ import java.util.UUID;
 public record CategoryJson(
     @JsonProperty("id")
     UUID id,
-    @JsonProperty("description")
+    @JsonProperty("category")
     String description,
     @JsonProperty("username")
     String username) {
