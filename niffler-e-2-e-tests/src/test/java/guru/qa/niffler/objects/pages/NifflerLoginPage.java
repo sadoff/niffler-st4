@@ -24,15 +24,9 @@ public class NifflerLoginPage {
 
     @Step("Вввод и отправка данных данных пользователя на странице логина")
     public NifflerLoginPage sendUserData(String name, String password){
-        userNameInput
-                .shouldBe(visible)
-                .setValue(name);
-        passwordInput
-                .shouldBe(visible)
-                .setValue(password);
-        submitButton
-                .shouldBe(visible)
-                .click();
+        userNameInput.setValue(name);
+        passwordInput.setValue(password);
+        submitButton.click();
         return this;
     }
 
